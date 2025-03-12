@@ -77,7 +77,16 @@ public class ListaDeProductos {
 	public void setPrecioTotal(double precioTotal) {
 		this.precioTotal = precioTotal;
 	}
-    
-    
+	
+	public String toString() {
+	    return "ListaDeProductos{" +
+	            ", producto=" + (producto != null ? producto.getNombre() : "Sin Producto") +
+	            ", cantidad=" + cantidad +
+	            ", precioUnitario=" + precioUnitario +
+	            ", precioTotal=" + precioTotal +
+	            '}';
+	}
 
+    
+    
 }
