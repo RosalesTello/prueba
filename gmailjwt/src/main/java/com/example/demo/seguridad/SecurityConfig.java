@@ -1,29 +1,22 @@
 package com.example.demo.seguridad;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
-@EnableWebSecurity
-
-
-
 public class SecurityConfig {
-	
-	private final JwtTokenProvider jwtTokenProvider;
+
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public SecurityConfig(OAuth2SuccessHandler oAuth2SuccessHandler, JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -31,17 +24,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/publico").permitAll() // Rutas públicas
-                .anyRequest().authenticated() // Todas las demás requieren autenticación
+                .requestMatchers("/", "/publico", "/oauth2/**").permitAll() // 🔹 Rutas públicas
+                .anyRequest().authenticated() // 🔥 TODAS LAS DEMÁS requieren JWT
             )
             .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/privado", true) // Redirige después de iniciar sesión
+                .successHandler(oAuth2SuccessHandler)
+                .defaultSuccessUrl("/perfil", true)// 🔥 Devuelve un JWT en vez de redirigir
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
+                .logoutUrl("/logout-google")
                 .logoutSuccessUrl("/")
-                .permitAll()
-            );
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 🔹 Valida el JWT en cada solicitud
 
         return http.build();
     }
