@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,30 @@ public class PedidoController {
 	        return pedidoService.vaciarCarrito();
 	    }
 
+	    
+	    @DeleteMapping("/eliminar-producto/{nombreProducto}")
+	    public ResponseEntity<Object> eliminarProductoDelCarrito(@PathVariable String nombreProducto) {
+	        return pedidoService.eliminarProductoDelCarrito(nombreProducto);
+	    }
+
+	    // Nuevo método para obtener todos los productos del carrito
+	    @GetMapping("/obtener-carrito")
+	    public ResponseEntity<Object> obtenerCarrito() {
+	        return pedidoService.obtenerCarrito();
+	    }
+	    
+	    @PutMapping("/actualizarproducto")
+	    public ResponseEntity<Object> actualizarProductoEnCarrito(@RequestBody ListaDeProductos productoActualizado) {
+	        return pedidoService.actualizarProductoEnCarrito(productoActualizado);
+	    }
+	    
+	    @GetMapping("/filtradoporcarrito/{nombre}")
+	    public ResponseEntity<Object> filtradoporcarrito(@PathVariable String  nombre) {
+	    	return pedidoService.filtradoCarrito(nombre);
+	    
+	    }
+	      
+	    
+	    
 	    
 }

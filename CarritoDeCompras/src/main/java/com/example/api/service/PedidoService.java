@@ -37,9 +37,9 @@ public class PedidoService {
         if (productoenListadeProductos.getStock() >=pedidoTemporal.getCantidad()) {
         	pedidoTemporal.setPrecioUnitario(productoenListadeProductos.getPrecio());
         	pedidoTemporal.setPrecioTotal(productoenListadeProductos.getPrecio()*pedidoTemporal.getCantidad());
-        	
+      
         	productoenListadeProductos.setStock(productoenListadeProductos.getStock()-pedidoTemporal.getCantidad());
-        	productoRepositorio.save(productoenListadeProductos);
+        	productoRepositorio.save(productoenListadeProductos);//aca lo guarda en la abse de datos
             listaTemporal.add(pedidoTemporal);
             
             //para mostart el total de lo que se va agregando 
@@ -98,9 +98,6 @@ public class PedidoService {
     	}
     	
         for (ListaDeProductos item : listaTemporal) {
-        	//item.getProducto().setStock(14-1);
-        	//productoRepositorio.save(item); gurdas un objeto item no producto no deja
-        	//no puedes setiar el stock del otro 
             Producto producto = productoRepositorio.findById(item.getProducto().getNombre()).orElse(null);
              producto.setStock(producto.getStock() + item.getCantidad());
              productoRepositorio.save(producto);
@@ -110,52 +107,80 @@ public class PedidoService {
     }
     
     
-    
-    
-    
-    //aca actualizar a probar mañana 
-    public ResponseEntity<Object> actualizarPedido(int id, Pedido nuevoPedido) {
-        Pedido pedidoExistente = pedidoRepositorio.findById(id).orElse(null);
-
-        if (pedidoExistente == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> eliminarProductoDelCarrito(String nombreProducto) {
+        for (ListaDeProductos item : listaTemporal) {
+        	//trae todo el objeto
+            if (item.getProducto().getNombre().equals(nombreProducto)) {
+                // Restaurar stock
+                Producto producto = productoRepositorio.findById(nombreProducto).orElse(null);
+                if (producto != null) {
+                    producto.setStock(producto.getStock() + item.getCantidad());
+                    productoRepositorio.save(producto);
+                }
+//s
+                listaTemporal.remove(item);
+                return ResponseEntity.ok("Producto '" + nombreProducto + "' eliminado del carrito y stock restaurado.");
+            }
         }
 
-        // 🔹 1. Devolver el stock de los productos del pedido actual antes de modificarlo
-        for (ListaDeProductos item : pedidoExistente.getItems()) {
-            Producto producto = productoRepositorio.findById(item.getProducto().getNombre()).orElse(null);
-            if (producto != null) {
-                producto.setStock(producto.getStock() + item.getCantidad()); // Devuelve el stock original
+        return ResponseEntity.badRequest().body("El producto no está en el carrito.");
+    }
+    
+    
+    public ResponseEntity<Object> obtenerCarrito() {
+        if (listaTemporal.isEmpty()) {
+            return ResponseEntity.ok("El carrito está vacío.");
+        }
+        return ResponseEntity.ok(listaTemporal);
+    }
+    
+    
+    public ResponseEntity<Object> actualizarProductoEnCarrito(ListaDeProductos productoActualizado) {
+        for (ListaDeProductos item : listaTemporal) {
+            if (item.getProducto().getNombre().equals(productoActualizado.getProducto().getNombre())) {
+                Producto producto = productoRepositorio.findById(productoActualizado.getProducto().getNombre()).orElse(null);
+                if (producto == null) {
+                    return ResponseEntity.badRequest().body("El producto con nombre '" + productoActualizado.getProducto().getNombre() + "' no existe en la base de datos.");
+                }
+                
+
+                producto.setStock(producto.getStock() + item.getCantidad()); 
                 productoRepositorio.save(producto);
+
+                if (producto.getStock() >= productoActualizado.getCantidad()) {
+                   
+                    producto.setStock(producto.getStock() - productoActualizado.getCantidad()); 
+                    productoRepositorio.save(producto);
+
+                    //aca es de la lista se setea de ese objeto
+                    item.setCantidad(productoActualizado.getCantidad());
+                    item.setPrecioTotal(item.getPrecioUnitario() * productoActualizado.getCantidad());
+
+                    return ResponseEntity.ok("Producto '" + productoActualizado.getProducto().getNombre() + "' actualizado en el carrito.");
+                } else {
+
+                    producto.setStock(producto.getStock() - item.getCantidad());
+                    productoRepositorio.save(producto);
+                    return ResponseEntity.badRequest().body("El stock disponible es insuficiente para la nueva cantidad.");
+                }
             }
         }
 
-        // 🔹 2. Validar stock antes de actualizar
-        for (ListaDeProductos nuevoItem : nuevoPedido.getItems()) {
-            Producto producto = productoRepositorio.findById(nuevoItem.getProducto().getNombre()).orElse(null);
-
-            if (producto == null) {
-                return ResponseEntity.badRequest().body("El producto '" + nuevoItem.getProducto().getNombre() + "' no existe.");
-            }
-
-            if (producto.getStock() >= nuevoItem.getCantidad()) {
-                producto.setStock(producto.getStock() - nuevoItem.getCantidad()); // Reduce stock según el nuevo pedido
-                productoRepositorio.save(producto);
-            } else {
-                return ResponseEntity.badRequest().body("Stock insuficiente para '" + producto.getNombre() + "'. Disponible: " + producto.getStock());
-            }
-        }
-
-        // 🔹 3. Actualizar el pedido en la base de datos
-        pedidoExistente.setFecha(nuevoPedido.getFecha());
-        pedidoExistente.setItems(nuevoPedido.getItems());
-
-        pedidoRepositorio.save(pedidoExistente);
-        return ResponseEntity.ok("Pedido actualizado correctamente.");
+        return ResponseEntity.badRequest().body("El producto no se encuentra en el carrito.");
     }
 
 
-
+    public ResponseEntity<Object>filtradoCarrito(String nombre)
+    {
+    	for (ListaDeProductos objeto:listaTemporal)
+    	{
+    		if(objeto.getProducto().getNombre().equals(nombre)) {
+    		return ResponseEntity.ok(objeto);
+    		}
+    	}
+    	return ResponseEntity.notFound().build();
+    }
     
+ 
 
 }
