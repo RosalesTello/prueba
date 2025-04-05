@@ -1,5 +1,6 @@
 package com.example.api.Entidades;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -17,6 +18,7 @@ public class Producto {
     
     @ManyToOne
     @JoinColumn(name = "idCategoria", referencedColumnName = "nombreCategoria") // FK con ID numérico
+    @JsonBackReference // Evita ciclo infinito
     private Categoria categoria;
 
 	public Producto(String nombre, double precio, int stock, String estado, String foto, Categoria categoria) {
@@ -72,7 +74,7 @@ public class Producto {
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
-
+ 
 	public Categoria getCategoria() {
 		return categoria;
 	}

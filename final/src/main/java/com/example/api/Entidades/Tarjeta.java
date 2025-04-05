@@ -2,6 +2,8 @@ package com.example.api.Entidades;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +23,7 @@ public class Tarjeta {
     
     @ManyToOne
     @JoinColumn(name = "Cliente", referencedColumnName = "nombreCliente") // FK con ID
+    @JsonIgnore
     private Cliente cliente;
     
   

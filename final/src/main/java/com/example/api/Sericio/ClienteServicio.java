@@ -23,9 +23,11 @@ public class ClienteServicio {
 	    	
 	    	Cliente clienteAgregar=clienteRepo.findByCorreo(cliente.getCorreo()).orElse(null);
 	        if (clienteAgregar==null) {
+	        	cliente.setEstado("Activo");
+	        	 clienteRepo.save(cliente);
 	        	 return ResponseEntity.status(HttpStatus.CREATED).build();
 	        }
-	        clienteRepo.save(cliente);
+	       
 	       
 	        return ResponseEntity.status(HttpStatus.CONFLICT).body("El cliente ya existe");
 	    }

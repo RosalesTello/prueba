@@ -1,6 +1,9 @@
 package com.example.api.Entidades;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,6 +17,7 @@ public class Categoria {
     private String estado;
     
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @JsonManagedReference 
     private List<Producto> productos;
 
     public Categoria(String nombreCategoria, String estado, List<Producto> productos) {

@@ -30,6 +30,7 @@ public class CategoriaServicio {
 		Categoria categorias=categoriarepo.findById(categoria.getNombreCategoria()).orElse(null);
 		if(categorias==null)
 		{
+			categoria.setEstado("Activo");
 		    categoriarepo.save(categoria);
 		    return ResponseEntity.ok("Producto Guardado Correctamente");
 		}

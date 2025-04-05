@@ -38,15 +38,12 @@ public class TarjetaServicio {
 	        if (tarjetarAgregar==null) {
 	        	
 	        	tarjeta.setEstado("Activo");
-	        	//el tipo de pago lo pones o lo ponemos
-	        	//setendria que poner tarjeta.setFechaExpiracion("");
+	        	tarjeta.setTipo("BCP");
 	        	tarjeta.setCliente(cliente); // Asignamos el cliente encontrado a la tarjeta.
 	            tarjetaRepo.save(tarjeta); // Guardamos la tarjeta en el repositorio.
 	           
 	            return ResponseEntity.status(HttpStatus.CREATED).build();
 	        }
-	        
-	        
 	        return ResponseEntity.status(HttpStatus.CONFLICT).body("La tarjeta Ya esxiste");
 	    }
 	    

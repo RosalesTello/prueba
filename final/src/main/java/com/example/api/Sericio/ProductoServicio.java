@@ -47,6 +47,7 @@ public class ProductoServicio {
 	public ResponseEntity<Object> Editar(Producto productoNuevo) {
 	    Producto productoExistente = productorepo.findById(productoNuevo.getNombre()).orElse(null);
 	    if (productoExistente != null) {
+	    	productoExistente.setNombre(productoNuevo.getNombre());
 	        productoExistente.setPrecio(productoNuevo.getPrecio());
 	        productoExistente.setStock(productoNuevo.getStock());
 	        productoExistente.setFoto(productoNuevo.getFoto());
