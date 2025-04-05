@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,68 +25,68 @@ public class Pedido {
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ComprobantedePago> detalles;
+    private List<ComprobantedePago> detalles = new ArrayList<>(); // Inicializa la lista aquí
     
-    //muchos pedidos asociadas a pedido
+    // Muchos pedidos asociados a una tarjeta
     @ManyToOne
-    @JoinColumn(name="tarjeta",referencedColumnName="numero")
+    @JoinColumn(name="tarjeta", referencedColumnName="numero")
     private Tarjeta tarjeta;
 
-	public Pedido(int idPedido, LocalDate fecha, String estado, List<ComprobantedePago> detalles, Tarjeta tarjeta) {
-		super();
-		this.idPedido = idPedido;
-		this.fecha = fecha;
-		this.estado = estado;
-		this.detalles = detalles;
-		this.tarjeta = tarjeta;
-	}
+    // Constructor con parámetros
+    public Pedido(int idPedido, LocalDate fecha, String estado, List<ComprobantedePago> detalles, Tarjeta tarjeta) {
+        super();
+        this.idPedido = idPedido;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.detalles = detalles;
+        this.tarjeta = tarjeta;
+    }
 
-	public Pedido() {
-		super();
-	}
+    // Constructor sin parámetros
+    public Pedido() {
+        super();
+        this.detalles = new ArrayList<>(); // Inicializa la lista aquí
+    }
 
-	public int getIdPedido() {
-		return idPedido;
-	}
+    public int getIdPedido() {
+        return idPedido;
+    }
 
-	public void setIdPedido(int idPedido) {
-		this.idPedido = idPedido;
-	}
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
+    }
 
-	public LocalDate getFecha() {
-		return fecha;
-	}
+    public LocalDate getFecha() {
+        return fecha;
+    }
 
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
-	public String getEstado() {
-		return estado;
-	}
+    public String getEstado() {
+        return estado;
+    }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-	public List<ComprobantedePago> getDetalles() {
-		return detalles;
-	}
+    public List<ComprobantedePago> getDetalles() {
+        return detalles;
+    }
 
-	public void setDetalles(List<ComprobantedePago> detalles) {
-		this.detalles = detalles;
-	}
+    public void setDetalles(List<ComprobantedePago> detalles) {
+        this.detalles = detalles;
+    }
 
-	public Tarjeta getTarjeta() {
-		return tarjeta;
-	}
+    public Tarjeta getTarjeta() {
+        return tarjeta;
+    }
 
-	public void setTarjeta(Tarjeta tarjeta) {
-		this.tarjeta = tarjeta;
-	}
-    
-
-   
+    public void setTarjeta(Tarjeta tarjeta) {
+        this.tarjeta = tarjeta;
+    }
 }
 
 	

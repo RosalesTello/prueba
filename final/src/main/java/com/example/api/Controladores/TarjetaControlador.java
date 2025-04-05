@@ -2,6 +2,7 @@ package com.example.api.Controladores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +23,8 @@ public class TarjetaControlador {
 	        return tarjetaServicio.listarTarjetas();
 	    }
 	    
-	    @PostMapping("/agregar")
-	    public ResponseEntity<Object> agregarTarjeta(@RequestBody Tarjeta tarjeta,String correo) {
+	    @PostMapping("/agregar/{correo}")
+	    public ResponseEntity<Object> agregarTarjeta(@RequestBody Tarjeta tarjeta,@PathVariable String correo) {
 	        return tarjetaServicio.agregarTarjeta(tarjeta,correo);
 	    }
 	    

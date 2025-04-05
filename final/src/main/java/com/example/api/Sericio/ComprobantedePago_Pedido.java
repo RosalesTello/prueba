@@ -131,8 +131,9 @@ public class ComprobantedePago_Pedido {
 		   Producto producto=productoRepo.findById(comprobante.getProducto().getNombre()).orElse(null);
 		   producto.setStock(producto.getStock()+comprobante.getCantidad());
 		   productoRepo.save(producto);
-		   lista.clear();
+		   //lomipiabas antes de recorratodo lista.clear();
 	   }
+	   lista.clear();
 	   
 	   return ResponseEntity.ok("Carrito Vacio");
 	}
@@ -170,6 +171,7 @@ public class ComprobantedePago_Pedido {
 
 	        for (ComprobantedePago comprobante : lista) {
 	            comprobante.setPedido(pedido);  // Asociar cada comprobante al pedido
+	            pedido.getDetalles().add(comprobante);
 	        }
 	        
 	        double totalGeneral = 0.0;
@@ -203,6 +205,16 @@ public class ComprobantedePago_Pedido {
 	                             .body("Hubo un error al procesar el pedido. Por favor, intenta nuevamente.");
 	    }
 	}
+	
+	
+	// Mostrar todos los productos agregados al carrito 
+	public ResponseEntity<Object> visualizarCarrito() {
+	    if (lista.isEmpty()) {
+	        return ResponseEntity.noContent().build();
+	    }
+	    return ResponseEntity.ok(lista);
+	}
+
 
 
 	

@@ -25,9 +25,9 @@ public class TarjetaServicio {
 	        return ResponseEntity.ok(tarjetas);
 	    }
 	    
-	    //solopara gregar tarjeta tarjeta no repite usuario si
+	    //solopara gregar tarjeta tarjeta no repite usuario si  cliente
 	    public ResponseEntity<Object> agregarTarjeta(Tarjeta tarjeta,String correo) {
-	    	
+	    	//buscodefrente en cliente podria ser con nombre
 	    	Cliente cliente=clienteRepo.findByCorreo(correo).orElse(null);
 		    if (cliente==null)
 		     {

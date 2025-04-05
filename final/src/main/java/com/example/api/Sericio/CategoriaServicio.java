@@ -25,6 +25,7 @@ public class CategoriaServicio {
 		
 	}
 	
+	
 	public ResponseEntity<Object>agregar(Categoria categoria)
 	{
 		Categoria categorias=categoriarepo.findById(categoria.getNombreCategoria()).orElse(null);

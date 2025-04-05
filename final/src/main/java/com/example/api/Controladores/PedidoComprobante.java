@@ -39,7 +39,7 @@ public class PedidoComprobante {
 	        return comprobanteService.actualizarComprobante(comprobanteActualizado);
 	    }
 
-	    // Filtrar un producto por su id en el carrito
+	    // Filtrar un producto por su id en el carrito se le quitara el pathvaribale xk solo le pasaremos el dato no va agarrar de la url
 	    @GetMapping("/filtradoProductoDelCarrito/{nombreProducto}")
 	    public ResponseEntity<Object> filtradoProductoDelCarrito(@PathVariable String nombreProducto) {
 	        return comprobanteService.filtradoproductoporcarrito(nombreProducto);
@@ -61,6 +61,13 @@ public class PedidoComprobante {
 	    @PostMapping("/guardar/{correo}")
 	    public ResponseEntity<Object> guardarPedido(@PathVariable String correo) {
 	        return comprobanteService.guardarPedido(correo);
+	    }
+	    
+	    
+	    
+	    @GetMapping("/visualizar")
+	    public ResponseEntity<Object> verCarrito() {
+	        return comprobanteService.visualizarCarrito();
 	    }
 	}
 
