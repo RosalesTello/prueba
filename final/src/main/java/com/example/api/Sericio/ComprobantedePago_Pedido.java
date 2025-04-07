@@ -108,7 +108,7 @@ public class ComprobantedePago_Pedido {
 	    return ResponseEntity.notFound().build(); 
 	}
 
-	
+	//pepe//////
 	//para cuando actulizes y elimines traes el objeto para mostar
 	public ResponseEntity<Object> filtradoproductoporcarrito(String nomberProducto) {
 	    for (ComprobantedePago comprobante : lista) {
