@@ -37,6 +37,7 @@ public class ProductoServicio {
 		Producto productoAgregar=productorepo.findById(producto.getNombre()).orElse(null);
 		if(productoAgregar==null)
 		{
+			producto.setEstado("Activo");
 			productorepo.save(producto);
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}

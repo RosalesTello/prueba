@@ -1,6 +1,9 @@
 package com.example.api.Entidades;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -15,6 +18,7 @@ public class Cliente {
     private String estado;
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+   
     private List<Tarjeta> tarjetas;
 
     public Cliente(String nombreCliente, String correo, String estado, List<Tarjeta> tarjetas) {

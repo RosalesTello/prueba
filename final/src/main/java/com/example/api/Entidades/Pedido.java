@@ -1,5 +1,6 @@
 package com.example.api.Entidades;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -24,12 +25,13 @@ public class Pedido {
     private String estado;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    
     private List<ComprobantedePago> detalles = new ArrayList<>(); // Inicializa la lista aquí
     
     // Muchos pedidos asociados a una tarjeta
     @ManyToOne
     @JoinColumn(name="tarjeta", referencedColumnName="numero")
+    @JsonBackReference
     private Tarjeta tarjeta;
 
     // Constructor con parámetros

@@ -27,7 +27,7 @@ public class TarjetaServicio {
 	    
 	    //solopara gregar tarjeta tarjeta no repite usuario si  cliente
 	    public ResponseEntity<Object> agregarTarjeta(Tarjeta tarjeta,String correo) {
-	    	//buscodefrente en cliente podria ser con nombre
+	    	//asociar el correo buscar el cliente y ponerlo en tarjeta
 	    	Cliente cliente=clienteRepo.findByCorreo(correo).orElse(null);
 		    if (cliente==null)
 		     {
@@ -36,7 +36,7 @@ public class TarjetaServicio {
 	    	
 	    	Tarjeta tarjetarAgregar=tarjetaRepo.findById(tarjeta.getNumero()).orElse(null);
 	        if (tarjetarAgregar==null) {
-	        	
+	        	tarjeta.setMontoDisponible(100);
 	        	tarjeta.setEstado("Activo");
 	        	tarjeta.setTipo("BCP");
 	        	tarjeta.setCliente(cliente); // Asignamos el cliente encontrado a la tarjeta.

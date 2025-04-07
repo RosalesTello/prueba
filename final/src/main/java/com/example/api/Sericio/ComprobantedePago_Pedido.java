@@ -40,10 +40,10 @@ public class ComprobantedePago_Pedido {
 
 	        productoEnComprobante.setStock(productoEnComprobante.getStock() - comprobantepago.getCantidad());
 	        productoRepo.save(productoEnComprobante);
-
+	        comprobantepago.setEstado("Pagado");
 	        lista.add(comprobantepago);
 
-	        return ResponseEntity.ok(lista);
+	        return ResponseEntity.ok(lista); 
 	    }
 
 	    return ResponseEntity.badRequest().body("Stock insuficiente");
@@ -82,17 +82,18 @@ public class ComprobantedePago_Pedido {
 	            productoEnComprobante.setStock(productoEnComprobante.getStock() + comprobanteExistente.getCantidad()); 
 	            productoRepo.save(productoEnComprobante);
 
-	           
+	           //seactuliza en la base de dtos
 	            if (productoEnComprobante.getStock() >= comprobanteNuevo.getCantidad()) {
+	            	comprobanteExistente.setEstado("Activo");
 	                comprobanteExistente.setPrecioUnitario(productoEnComprobante.getPrecio());
 	                comprobanteExistente.setPrecioTotal(productoEnComprobante.getPrecio() * comprobanteNuevo.getCantidad());
-
+	                
 	                productoEnComprobante.setStock(productoEnComprobante.getStock() - comprobanteNuevo.getCantidad());
 	                productoRepo.save(productoEnComprobante);
 	                
-	              //aca es de la lista se setea de ese objeto xk eso no va ala base de datos 
 	                comprobanteExistente.setCantidad(comprobanteNuevo.getCantidad());
-	                comprobanteExistente.setPrecioTotal(comprobanteNuevo.getPrecioTotal());
+	                //esta linea creo que escomprobanteExistente.setPrecioTotal(comprobanteNuevo.getPrecioTotal());
+	                
 
 	                return ResponseEntity.ok("Producto actualizado correctamente en el carrito.");
 	            } else {
@@ -140,7 +141,7 @@ public class ComprobantedePago_Pedido {
 
 	
 
-	
+	//reuqetsbody o pathvaribale cambia el codigo
 	public ResponseEntity<Object>buscarpedidoporcorreo(String correo)
 	{
 		List<Pedido>pedidosdelusuario=pedidoRepo.findByTarjeta_Cliente_Correo(correo);
@@ -152,7 +153,7 @@ public class ComprobantedePago_Pedido {
 		
 	}
 	
-	
+	//reuqetsbody o pathvaribale cambia el codigo
 	public ResponseEntity<Object> guardarPedido(String correo) {
 	    try {
 	        if (lista.isEmpty()) {
@@ -167,6 +168,22 @@ public class ComprobantedePago_Pedido {
 	        if (tarjeta == null) {
 	            return ResponseEntity.notFound().build();
 	        }
+	        
+	     // Calcular total del pedido
+	        double totaldelacompra = 0.0;
+	        for (ComprobantedePago comprobante : lista) {
+	            totaldelacompra += comprobante.getPrecioTotal();
+	        }
+
+	        // Verificar si la tarjeta tiene suficiente saldo
+	        if (tarjeta.getMontoDisponible() < totaldelacompra) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                .body("Saldo insuficiente en la tarjeta.");
+	        }
+	        tarjeta.setMontoDisponible(tarjeta.getMontoDisponible() - totaldelacompra);
+	        tarjetaRepo.save(tarjeta);
+	       
+	        //seagegae la tarjeta al pedido 
 	        pedido.setTarjeta(tarjeta);
 
 	        for (ComprobantedePago comprobante : lista) {
@@ -208,6 +225,7 @@ public class ComprobantedePago_Pedido {
 	
 	
 	// Mostrar todos los productos agregados al carrito 
+	//nocenecista 
 	public ResponseEntity<Object> visualizarCarrito() {
 	    if (lista.isEmpty()) {
 	        return ResponseEntity.noContent().build();
