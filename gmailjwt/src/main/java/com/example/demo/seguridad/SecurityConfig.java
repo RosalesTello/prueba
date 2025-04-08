@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+	private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public SecurityConfig(OAuth2SuccessHandler oAuth2SuccessHandler, JwtAuthenticationFilter jwtAuthenticationFilter) {
@@ -24,21 +24,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/publico", "/oauth2/**").permitAll() // 🔹 Rutas públicas
-                .anyRequest().authenticated() // 🔥 TODAS LAS DEMÁS requieren JWT
+                .requestMatchers("/", "/incognito", "/publico", "/oauth2/**").permitAll() // Rutas públicas sin autenticación
+                .anyRequest().authenticated() // TODAS LAS DEMÁS requieren autenticación
             )
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuth2SuccessHandler)
-                .defaultSuccessUrl("/perfil", true)// 🔥 Devuelve un JWT en vez de redirigir
+                .defaultSuccessUrl("/perfil", true) // Redirige a /perfil al éxito de login
             )
             .logout(logout -> logout
-                .logoutUrl("/logout-google")
-                .logoutSuccessUrl("/")
+                .logoutUrl("/logout-google") // URL para cerrar sesión
+                .logoutSuccessUrl("/oauth2/authorization/google") // Redirige a la página principal tras logout
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
             )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 🔹 Valida el JWT en cada solicitud
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Valida el JWT en cada solicitud
 
         return http.build();
     }
+
 }
