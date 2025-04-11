@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/incognito", "/publico", "/oauth2/**").permitAll() // Rutas públicas sin autenticación
+                .requestMatchers("/", "/login", "/logout-google", "/oauth2/**").permitAll() // Rutas públicas sin autenticación
                 .anyRequest().authenticated() // TODAS LAS DEMÁS requieren autenticación
             )
             .oauth2Login(oauth2 -> oauth2
@@ -33,7 +33,7 @@ public class SecurityConfig {
             )
             .logout(logout -> logout
                 .logoutUrl("/logout-google") // URL para cerrar sesión
-                .logoutSuccessUrl("/oauth2/authorization/google") // Redirige a la página principal tras logout
+                .logoutSuccessUrl("/") // Redirige a la página principal tras logout
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
             )

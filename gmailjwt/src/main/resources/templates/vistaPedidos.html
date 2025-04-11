@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pedidos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mensaje {
+            background-color: #ffe5e5;
+            color: #d8000c;
+            border: 1px solid #d8000c;
+            padding: 10px 15px;
+            border-radius: 5px;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            text-align: center;
+        }
+
+        .pedido {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .pedido h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .pedido p {
+            margin: 5px 0;
+            color: #495057;
+        }
+
+        .pedido h4 {
+            margin-top: 20px;
+            color: #343a40;
+        }
+
+        .pedido ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .pedido li {
+            background-color: #f1f3f5;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .pedido li span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Mis Pedidos</h2>
+
+    <!-- Mostrar mensaje si existe -->
+    <div th:if="${mensaje != null}" class="mensaje">
+        <p th:text="${mensaje}"></p>
+    </div>
+
+    <!-- Mostrar pedidos -->
+    <div th:if="${listaPedidos != null}">
+        <div th:each="pedido, iterStat : ${listaPedidos}" class="pedido">
+            <h3>Pedido </h3> <!-- Esto mostrará "Pedido 1", "Pedido 2", etc. -->
+            <p><strong>Fecha:</strong> <span th:text="${pedido.fecha}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${pedido.estado}"></span></p>
+
+            <h4>Detalles del pedido:</h4>
+            <ul>
+                <li th:each="detalle : ${pedido.detalles}">
+                    Producto: <span th:text="${detalle.producto.nombre}">Nombre producto</span> - 
+                    Cantidad: <span th:text="${detalle.cantidad}">0</span> - 
+                    Precio Unitario: S/.<span th:text="${detalle.precioUnitario}">0.0</span> - 
+                    Total: S/.<span th:text="${detalle.precioTotal}">0.0</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+

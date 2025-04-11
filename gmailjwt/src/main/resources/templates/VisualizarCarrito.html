@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Carrito</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Carrito de Compras</h1>
+		
+		
+
+        <!-- Mensaje de error si hay un problema -->
+        <div th:if="${mensajeError}" class="alert alert-danger">
+            <p th:text="${mensajeError}"></p>
+        </div>
+
+        <!-- Si hay productos en el carrito, mostramos la tabla -->
+        <div th:if="${carrito != null}">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Precio Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="comprobante : ${carrito}">
+                        <td th:text="${comprobante.producto.nombre}"></td>
+                        <td th:text="${comprobante.cantidad}"></td>
+                        <td th:text="${#numbers.formatDecimal(comprobante.precioUnitario, 2, 2)}"></td>
+                        <td th:text="${#numbers.formatDecimal(comprobante.precioTotal, 2, 2)}"></td>
+                        <td>
+                            <a th:href="@{/eliminarProductoPorNombre/{nombre}(nombre=${comprobante.producto.nombre})}" class="btn btn-danger btn-sm">Eliminar</a>
+                            <a th:href="@{/editarProductoPorNombre/{nombre}(nombre=${comprobante.producto.nombre})}" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Total a pagar -->
+            <div class="text-right mt-3">
+                <h4>Total a pagar: <span th:text="'S/ ' + ${#numbers.formatDecimal(totalPagar, 2, 2)}"></span></h4>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="mt-4 d-flex justify-content-between">
+                <div>
+                    <a href="/agregarProducto" class="btn btn-primary">Seguir Comprando</a>
+                    <a href="/vaciarCarrito" class="btn btn-danger">Vaciar Carrito</a>
+                </div>
+                <div>
+                    <a href="/realizarpago" class="btn btn-success">Finalizar Compra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

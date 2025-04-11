@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Producto</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2>Editar Producto en el Carrito</h2>
+
+    <div th:if="${mensajeError}" class="alert alert-danger">
+        <p th:text="${mensajeError}"></p>
+    </div>
+    
+    <form th:action="@{/actualizarProducto}" th:object="${comprobante}" method="post">
+        <!-- Nombre del Producto (campo oculto para enviarlo no se estaba enviando por eso no actualizaba) -->
+        <input type="hidden" th:field="*{producto.nombre}" th:value="${comprobante.producto.nombre}" />
+
+        <div class="form-group">
+            <label for="nombre">Producto:</label>
+            <input type="text" id="nombre" class="form-control" th:value="${comprobante.producto.nombre}" readonly />
+        </div>
+
+        <div class="form-group">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" class="form-control" th:field="*{cantidad}" min="1" required />
+        </div>
+
+        <div class="form-group">
+            <label for="precioUnitario">Precio Unitario:</label>
+            <input type="text" id="precioUnitario" class="form-control" th:value="${#numbers.formatDecimal(comprobante.precioUnitario, 2, 2)}" readonly />
+        </div>
+
+        <div class="form-group">
+            <label for="precioTotal">Precio Total:</label>
+            <input type="text" id="precioTotal" class="form-control" th:value="${#numbers.formatDecimal(comprobante.precioTotal, 2, 2)}" readonly />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="#" class="btn btn-secondary" th:href="@{/verCarrito}">Cancelar</a>
+    </form>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
