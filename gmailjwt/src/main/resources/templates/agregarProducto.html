@@ -173,19 +173,19 @@
             </div>
             
             <div class="card-body">
-                <!-- Mensaje de éxito -->
+            
                 <div th:if="${mensaje}" class="notification notification-success">
                     <i class="fas fa-check-circle"></i>
                     <span th:text="${mensaje}"></span>
                 </div>
                 
-                <!-- Mensaje de error -->
+           
                 <div th:if="${mensajeError}" class="notification notification-error">
                     <i class="fas fa-exclamation-circle"></i>
                     <span th:text="${mensajeError}"></span>
                 </div>
                 
-                <!-- Mensaje de flash éxito (para redirecciones) -->
+                
                 <div th:if="${mensajeExito}" class="notification notification-success">
                     <i class="fas fa-check-circle"></i>
                     <span th:text="${mensajeExito}"></span>

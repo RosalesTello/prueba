@@ -9,15 +9,10 @@
 <body>
     <div class="container mt-4">
         <h1>Carrito de Compras</h1>
-		
-		
 
-        <!-- Mensaje de error si hay un problema -->
         <div th:if="${mensajeError}" class="alert alert-danger">
             <p th:text="${mensajeError}"></p>
         </div>
-
-        <!-- Si hay productos en el carrito, mostramos la tabla -->
         <div th:if="${carrito != null}">
             <table class="table table-bordered">
                 <thead>
@@ -43,7 +38,6 @@
                 </tbody>
             </table>
 
-            <!-- Total a pagar -->
             <div class="text-right mt-3">
                 <h4>Total a pagar: <span th:text="'S/ ' + ${#numbers.formatDecimal(totalPagar, 2, 2)}"></span></h4>
             </div>
